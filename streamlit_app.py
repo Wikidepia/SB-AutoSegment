@@ -27,11 +27,12 @@ def get_segment(video_id):
 
     # Align transcript word to prediction
     i_ts = 0
-    dict_tagger = sentence.to_dict("pos")
+    dict_tagger = sentence.to_dict("is_sponsor")
     for entity in dict_tagger["entities"]:
         for w in entity["text"].split():
             old_text = transcript[i_ts - 1]["text"]
-            if old_text.endswith(w) and any(p in w for p in [".", "'", ","]):
+            # Temporary fix for wordpiece punctuation split
+            if old_text.endswith(w) and any(p in w for p in [".", "'", ",", "+"]):
                 continue
             ts_loop = transcript[i_ts]
             ts_loop["label"] = entity["labels"][0].value
@@ -42,7 +43,7 @@ def get_segment(video_id):
     sponsor_time = []
     label_sponsor = False
     for ts in transcript:
-        if "S" == ts["label"] and ts["score"] > 0.7:
+        if "SPONSOR" == ts["label"] and ts["score"] > 0.7:
             if label_sponsor:
                 sponsor_time[-1][1] = ts["show_s"]
             else:
