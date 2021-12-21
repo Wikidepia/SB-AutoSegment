@@ -6,31 +6,11 @@ from flair.data import Sentence
 from flair.models import SequenceTagger
 
 import transcript_api
-import unicodedata
+
 
 @st.cache(allow_output_mutation=True)
 def load_model():
     return SequenceTagger.load("final-model.pt")
-
-# Punctuation for wordpiece
-def is_punctuation(char):
-    """Checks whether `chars` is a punctuation character."""
-    cp = ord(char)
-    # We treat all non-letter/number ASCII as punctuation.
-    # Characters such as "^", "$", and "`" are not in the Unicode
-    # Punctuation class but we treat them as punctuation anyways, for
-    # consistency.
-    if (
-        (cp >= 33 and cp <= 47)
-        or (cp >= 58 and cp <= 64)
-        or (cp >= 91 and cp <= 96)
-        or (cp >= 123 and cp <= 126)
-    ):
-        return True
-    cat = unicodedata.category(char)
-    if cat.startswith("P"):
-        return True
-    return False
 
 
 @st.cache()
@@ -42,21 +22,17 @@ def get_segment(video_id):
         for ts in transcript
         if ts["text"].strip() != "" and "[" not in ts["text"]
     ]
-    sentence = Sentence(" ".join(x["text"] for x in transcript))
+    concat_sentence = " ".join(x["text"] for x in transcript)
+    sentence = Sentence(concat_sentence)
     tagger.predict(sentence)
 
     # Align transcript word to prediction
     i_ts = 0
     dict_tagger = sentence.to_dict("is_sponsor")
     for entity in dict_tagger["entities"]:
-        for w in entity["text"].split():
-            old_text = transcript[i_ts - 1]["text"]
-            # Temporary fix for wordpiece punctuation split
-            if old_text.endswith(w) and any(is_punctuation(c) for c in w):
-                continue
-            ts_loop = transcript[i_ts]
-            ts_loop["label"] = entity["labels"][0].value
-            ts_loop["score"] = entity["labels"][0].score
+        if concat_sentence[entity["start_pos"] - 1] == " " or i_ts == 0:
+            transcript[i_ts]["label"] = entity["labels"][0].value
+            transcript[i_ts]["score"] = entity["labels"][0].score
             i_ts += 1
 
     # Find time of sponsor
