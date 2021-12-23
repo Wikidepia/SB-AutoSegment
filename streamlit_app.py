@@ -39,7 +39,7 @@ def get_segment(video_id):
     sponsor_time = []
     label_sponsor = False
     for ts in transcript:
-        if "SPONSOR" == ts["label"] and ts["score"] > 0.7:
+        if "SPONSOR" == ts["label"]:
             if label_sponsor:
                 sponsor_time[-1][1] = ts["show_s"]
             else:
@@ -76,7 +76,7 @@ def main():
     for i, sponsor in enumerate(sponsor_time, 1):
         start_time = math.floor(sponsor[0])
         end_time = math.floor(sponsor[1])
-        if end_time == 0:
+        if start_time == end_time:
             continue
         with st.expander(
             f"#{i} Sponsor {datetime.timedelta(seconds=start_time)} to {datetime.timedelta(seconds=end_time)}"
