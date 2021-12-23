@@ -22,6 +22,8 @@ def get_segment(video_id):
         for ts in transcript
         if ts["text"].strip() != "" and "[" not in ts["text"]
     ]
+    if transcript == []:
+        raise Exception("No transcript found")
     concat_sentence = " ".join(x["text"] for x in transcript)
     sentence = Sentence(concat_sentence)
     tagger.predict(sentence)
