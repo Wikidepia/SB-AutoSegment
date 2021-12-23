@@ -47,6 +47,7 @@ def get_segment(video_id):
             label_sponsor = True
         else:
             label_sponsor = False
+    sponsor_time = [x for x in sponsor_time if x[1] != 0]
     return sponsor_time
 
 
@@ -56,7 +57,6 @@ def main():
     if not video_id:
         return
     sponsor_time = get_segment(video_id)
-    print(sponsor_time)
     st.markdown(
         """<style>.videoWrapper {
 		position: relative;
