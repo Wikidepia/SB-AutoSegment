@@ -35,8 +35,10 @@ def get_transcript(video_id):
     ]
     json3_url = None
     for cap in caption_tracks:
-        if "kind" in cap and cap["kind"] == "asr" and cap["languageCode"] == "en":
+        if "kind" in cap and cap["kind"] == "asr":
             json3_url = "https://www.youtube.com" + cap["baseUrl"] + "&fmt=json3"
+            if cap["languageCode"] != "en":
+                json3_url += "&tlang=en"
             break
     if json3_url is None:
         return sentences
