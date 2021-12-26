@@ -1,7 +1,5 @@
 # SponsorBlock Auto Segment
 
-[[Model Download](https://cloud.depia.wiki/sponsorblock/)]
-
 Automatically segment in-video YouTube sponsorships. Trained on a large dataset of YouTube sponsor transcript from SponsorBlock.
 
 ## Model information

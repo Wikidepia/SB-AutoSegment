@@ -10,7 +10,7 @@ import transcript_api
 
 @st.cache(allow_output_mutation=True)
 def load_model():
-    return SequenceTagger.load("final-model.pt")
+    return SequenceTagger.load("Wikidepia/SB-AutoSegment")
 
 
 @st.cache()
