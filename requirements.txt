@@ -1,3 +1,6 @@
+ffmpeg-python
 flair
+omegaconf
 requests
 streamlit
+torchaudio
