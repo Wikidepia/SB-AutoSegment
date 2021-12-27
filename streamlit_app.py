@@ -20,6 +20,8 @@ def get_segment(video_id):
     if transcript == []:
         # TODO : Add language check
         transcript = silero_stt.recognize(video_id)
+    if transcript == []:
+        raise Exception("No transcript found")
     transcript = [
         {"word": ts["word"].strip().split()[0], "start_ts": ts["start_ts"]}
         for ts in transcript

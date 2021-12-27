@@ -30,7 +30,10 @@ model, decoder, utils = torch.hub.load(
 
 def recognize(video_id):
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        ydl.download([video_id])
+        metadata = ydl.extract_info(video_id, download=False)
+        if metadata["duration"] > 10 * 60:
+            return []
+        ydl.download([])
     ffmpeg.input(f"{video_id}.webm").output(
         f"{video_id}.wav", ac=1, ar=16000
     ).overwrite_output().run()
