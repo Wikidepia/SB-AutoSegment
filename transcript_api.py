@@ -53,7 +53,7 @@ def get_transcript(video_id):
                 seg_ms = start_ms + seg["tOffsetMs"]
             else:
                 seg_ms = start_ms
-            sentences.append({"text": seg["utf8"], "show_s": seg_ms / 1000})
+            sentences.append({"word": seg["utf8"], "start_ts": seg_ms / 1000})
     return sentences
 
 

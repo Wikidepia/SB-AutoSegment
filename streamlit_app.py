@@ -6,25 +6,26 @@ from flair.data import Sentence
 from flair.models import SequenceTagger
 
 import transcript_api
-
+import silero_stt
 
 @st.cache(allow_output_mutation=True)
 def load_model():
     return SequenceTagger.load("Wikidepia/SB-AutoSegment")
 
 
-@st.cache()
 def get_segment(video_id):
     tagger = load_model()
     transcript = transcript_api.get_transcript(video_id)
-    transcript = [
-        {"text": ts["text"].strip().split()[0], "show_s": ts["show_s"]}
-        for ts in transcript
-        if ts["text"].strip() != "" and "[" not in ts["text"]
-    ]
     if transcript == []:
-        raise Exception("No transcript found")
-    concat_sentence = " ".join(x["text"] for x in transcript)
+        print("SILERO")
+        transcript = silero_stt.recognize(video_id)
+        print(transcript)
+    transcript = [
+        {"word": ts["word"].strip().split()[0], "start_ts": ts["start_ts"]}
+        for ts in transcript
+        if ts["word"].strip() != "" and "[" not in ts["word"]
+    ]
+    concat_sentence = " ".join(x["word"] for x in transcript)
     sentence = Sentence(concat_sentence)
     tagger.predict(sentence)
 
@@ -43,9 +44,9 @@ def get_segment(video_id):
     for ts in transcript:
         if "SPONSOR" == ts["label"]:
             if label_sponsor:
-                sponsor_time[-1][1] = ts["show_s"]
+                sponsor_time[-1][1] = ts["start_ts"]
             else:
-                sponsor_time.append([ts["show_s"], 0])
+                sponsor_time.append([ts["start_ts"], 0])
             label_sponsor = True
         else:
             label_sponsor = False
