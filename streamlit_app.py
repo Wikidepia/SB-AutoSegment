@@ -5,8 +5,9 @@ import streamlit as st
 from flair.data import Sentence
 from flair.models import SequenceTagger
 
-import transcript_api
 import silero_stt
+import transcript_api
+
 
 @st.cache(allow_output_mutation=True)
 def load_model():
@@ -17,9 +18,8 @@ def get_segment(video_id):
     tagger = load_model()
     transcript = transcript_api.get_transcript(video_id)
     if transcript == []:
-        print("SILERO")
+        # TODO : Add language check
         transcript = silero_stt.recognize(video_id)
-        print(transcript)
     transcript = [
         {"word": ts["word"].strip().split()[0], "start_ts": ts["start_ts"]}
         for ts in transcript

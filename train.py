@@ -49,5 +49,5 @@ trainer.fine_tune(
     learning_rate=5e-5,
     mini_batch_size=12,
     mini_batch_chunk_size=1,
-    max_epochs=1
+    max_epochs=1,
 )

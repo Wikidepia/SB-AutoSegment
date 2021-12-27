@@ -23,6 +23,7 @@ model, decoder, utils = torch.hub.load(
     model="silero_stt",
     language="en",
     device=device,
+    jit_model="jit_q",
 )
 (read_batch, split_into_batches, read_audio, prepare_model_input) = utils
 
