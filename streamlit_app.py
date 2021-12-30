@@ -25,7 +25,7 @@ def get_segment(video_id):
     transcript = [
         {"word": ts["word"].strip().split()[0], "start_ts": ts["start_ts"]}
         for ts in transcript
-        if ts["word"].strip() != "" and "[" not in ts["word"]
+        if ts["word"].strip() != "" and not ts["word"].startswith("[")
     ]
     concat_sentence = " ".join(x["word"] for x in transcript)
     sentence = Sentence(concat_sentence)
