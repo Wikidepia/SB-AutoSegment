@@ -61,7 +61,10 @@ def main():
     video_id = st.text_input("YouTube Video ID")
     if not video_id:
         return
-    sponsor_time = get_segment(video_id)
+    with st.spinner("Running model..."):
+        sponsor_time = get_segment(video_id)
+    if sponsor_time == []:
+        return st.success("No sponsor found")
     st.markdown(
         """<style>.videoWrapper {
 		position: relative;
