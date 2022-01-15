@@ -53,7 +53,19 @@ def get_segment(video_id):
         else:
             label_sponsor = False
     sponsor_time = [x for x in sponsor_time if x[1] != 0]
-    return sponsor_time
+
+    # Merge close sponsor
+    # idk how this works copilot wrote this
+    merged_sponsor_time = []
+    for seg in sponsor_time:
+        if merged_sponsor_time == []:
+            merged_sponsor_time.append(seg)
+        else:
+            if seg[0] - merged_sponsor_time[-1][1] < 5:
+                merged_sponsor_time[-1][1] = seg[1]
+            else:
+                merged_sponsor_time.append(seg)
+    return merged_sponsor_time
 
 
 def main():
