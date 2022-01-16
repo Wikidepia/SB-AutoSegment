@@ -49,10 +49,7 @@ def get_transcript(video_id):
         segs = event["segs"]
         start_ms = event["tStartMs"]
         for seg in segs:
-            if "tOffsetMs" in seg:
-                seg_ms = start_ms + seg["tOffsetMs"]
-            else:
-                seg_ms = start_ms
+            seg_ms = start_ms + seg["tOffsetMs"] if "tOffsetMs" in seg else start_ms
             sentences.append({"word": seg["utf8"], "start_ts": seg_ms / 1000})
     return sentences
 

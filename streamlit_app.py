@@ -44,7 +44,7 @@ def get_segment(video_id):
     sponsor_time = []
     label_sponsor = False
     for ts in transcript:
-        if "SPONSOR" == ts["label"]:
+        if ts["label"] == "SPONSOR":
             if label_sponsor:
                 sponsor_time[-1][1] = ts["start_ts"]
             else:
@@ -58,13 +58,12 @@ def get_segment(video_id):
     # idk how this works copilot wrote this
     merged_sponsor_time = []
     for seg in sponsor_time:
-        if merged_sponsor_time == []:
+        if not merged_sponsor_time:
             merged_sponsor_time.append(seg)
+        elif seg[0] - merged_sponsor_time[-1][1] < 5:
+            merged_sponsor_time[-1][1] = seg[1]
         else:
-            if seg[0] - merged_sponsor_time[-1][1] < 5:
-                merged_sponsor_time[-1][1] = seg[1]
-            else:
-                merged_sponsor_time.append(seg)
+            merged_sponsor_time.append(seg)
     return merged_sponsor_time
 
 
